@@ -167,8 +167,7 @@ this.anims.create({
 		const heightDiff = 71.25
 
 		//center buttons
-		// @ts-ignore
-		this.button2 =this.addimage(this.gameHalfWidth,startPosY,
+		this.button2 =this.add.image(this.gameHalfWidth,startPosY,
 			'numbers', 1).setInteractive().setData('value', 2)
 			
 			this.button5 = this.add.image(this.gameHalfWidth,this.button2.y
