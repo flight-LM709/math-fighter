@@ -73,7 +73,7 @@ export default class MathFighterScene extends Phaser.Scene {
 				this.gameHalfHeight - 200, 'player'
 			)
 			.setBounce(0.2)
-			.setOffset (-20, -8)
+			.setOffset (-20, -10)
 			//enemy
 			this.physics.add.collider (this.player, tile)
 			this.enemy = this.physics.add.sprite(
@@ -81,7 +81,7 @@ export default class MathFighterScene extends Phaser.Scene {
 				this.gameHalfHeight - 200, 'enemy'
 			)
 			.setBounce(0.2)
-			.setOffset (20, -5)
+			.setOffset (20, -10)
 			.setFlipX(true)
 			this.physics.add.collider (this.enemy, tile)
 			//slash
@@ -118,7 +118,7 @@ export default class MathFighterScene extends Phaser.Scene {
 			this.scoreLabel = this.add.text(10, 10, 'Score :', {
 				fill: 'white', backgroundColor:'black'
 			}).setDepth(1)
-			this.timeLabel = this.add.text(380, 10, 'Time :', {
+			this.timerLabel = this.add.text(380, 10, 'Time :', {
 				fill: 'white', backgroundColor:'black'
 			}).setDepth(1)
 			}
@@ -129,6 +129,7 @@ export default class MathFighterScene extends Phaser.Scene {
 				this.createSlash(this.player.x+60,this.player.y, 4, 600)
 			})
 			this.playerAttack = true
+			this.score += 10
 		}
 		if (this.correctAnswer === undefined) {
 			this.player.anims.play('player-standby', true)
@@ -139,15 +140,14 @@ export default class MathFighterScene extends Phaser.Scene {
 			this.time.delayedCall(500, () => {
 				this.createSlash(this.enemy.x-60,
 					this.enemy.y,2,-600,true)
-					this.score += 10
-					this.scoreLabel.setText('Score :' +this.score)
-					if(this.startGame = true) {
-						this.timerLabel.setText('Timer :' +this.timer)
+						})
+				this.enemyAttack=true
+			}
+			this.scoreLabel.setText('Score :' +this.score)
+			if (this.startGame = true) {
+				this.timerLabel.setText('Timer :' +this.timer)
 					}
-})
-this.enemyAttack=true
-		}
-	}
+			}
 	createAnimation() {
 		//player animations
      this.anims.create({
