@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-
+import GameOverScene from './GameOverScene';
 import MathFighterScene from './MathFighterScene'
 
 const config = {
@@ -18,7 +18,7 @@ const config = {
 		mode: Phaser.Scale.FIT,
 		autoCenter: Phaser.Scale.CENTER_BOTH
 		},
-	scene: [MathFighterScene],
+	scene: [MathFighterScene, GameOverScene],
 }
 
 export default new Phaser.Game(config)

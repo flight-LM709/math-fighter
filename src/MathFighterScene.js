@@ -32,6 +32,11 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.correctAnswer = undefined
 		this.playerAttack = false
 		this.enemyAttack = false
+		this.score = 0
+		this.scoreLabel = undefined
+		this.timer = 10
+		this.timerLabel = undefined
+		this.countdown = undefined
 	}
 	preload() {
 		this.load.image ('background', 'images/bg_layer1.png')
@@ -96,7 +101,27 @@ export default class MathFighterScene extends Phaser.Scene {
 					this.gameStart()
 					start_button.destroy()
 				}, this)
-	}
+			this.physics.add.overlap(
+				this.slash,
+				this.player,
+				this.spriteHit,
+				null,
+				this
+			)
+			this.physics.add.overlap(
+				this.slash,
+				this.enemy,
+				this.spriteHit,
+				null,
+				this
+			)
+			this.scoreLabel = this.add.text(10, 10, 'Score :', {
+				fill: 'white', backgroundColor:'black'
+			}).setDepth(1)
+			this.timeLabel = this.add.text(380, 10, 'Time :', {
+				fill: 'white', backgroundColor:'black'
+			}).setDepth(1)
+			}
 	update(time) {
 		if (this.correctAnswer === true && !this.playerAttack) {
 			this.player.anims.play('player-attack', true)
@@ -114,6 +139,11 @@ export default class MathFighterScene extends Phaser.Scene {
 			this.time.delayedCall(500, () => {
 				this.createSlash(this.enemy.x-60,
 					this.enemy.y,2,-600,true)
+					this.score += 10
+					this.scoreLabel.setText('Score :' +this.score)
+					if(this.startGame = true) {
+						this.timerLabel.setText('Timer :' +this.timer)
+					}
 })
 this.enemyAttack=true
 		}
@@ -178,14 +208,18 @@ this.anims.create({
 		this.player.anims.play('player-standby', true)
 		this.enemy.anims.play('enemy-standby', true)
 		this.resultText = this.add.text(this.gameHalfWidth,200,
-		// @ts-ignore
 		'0', { fontSize :'32px', fill: '#000'})
 		this.questionText = this.add.text(this.gameHalfWidth,100,
-		// @ts-ignore
 		'0', { fontSize : '32px', fill: '#000' })
 		this.createButtons()
 		this.input.on('gameobjectdown', this.addNumber, this)
 		this.generateQuestion()
+		this.countdown = this.time.addEvent({
+			delay:1000,
+			callback:this.gameOver,
+			callbackScope: this,
+			loop: true
+		})
 		}
 
 	createButtons() {
@@ -278,12 +312,13 @@ this.anims.create({
 			this.question[1] = numberA * numberB
 		}
 		if (operator === '-') {
-			this.question[0] = `${numberA} - ${numberB}`
-			this.question[1] = numberA - numberB
+			if (numberB > numberA) {
+			this.question[0] = `${numberB} - ${numberA}`
+			this.question[1] = numberB - numberA
 		} else {
 				this.question[0] = `${numberA} - ${numberB}`
 				this.question[1] = numberA - numberB
-			
+			}
 		}
 		if (operator === ':') {
 			do {
@@ -328,5 +363,12 @@ this.anims.create({
 				this.correctAnswer = undefined
 				this.generateQuestion()
 			})
+		}
+		gameOver(){
+			this.timer--
+			if(this.timer <0){
+				this.scene.start('over-scene',
+				{score: this.score})
+			}
 		}
 }
